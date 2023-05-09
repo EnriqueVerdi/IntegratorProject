@@ -9,7 +9,7 @@ abstract class UserRemoteDataSource {
   Future<List<UserModel>> getUsers();
 }
 
-class MedicionRemoteDataSourceImp implements UserRemoteDataSource {
+class UserRemoteDataSourceImp implements UserRemoteDataSource {
   @override
   Future<List<UserModel>> getUsers() async {
     //print('DataSource');

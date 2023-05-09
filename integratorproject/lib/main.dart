@@ -1,4 +1,11 @@
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'usecase_config.dart';
+
+UsecaseConfig usecaseConfig = UsecaseConfig();
+
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +28,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
 
   final String title;
 
