@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:integratorproject/features/user/presentation/blocs/users_bloc.dart';
 
-import '../blocs/mediciones_bloc.dart';
 
-class MedicionesPage extends StatefulWidget {
-  const MedicionesPage({super.key});
+class UsersPage extends StatefulWidget {
+  const UsersPage({super.key});
 
   @override
-  State<MedicionesPage> createState() => _MedicionesPageState();
+  State<UsersPage> createState() => _UsersPageState();
 }
 
-class _MedicionesPageState extends State<MedicionesPage> {
+class _UsersPageState extends State<UsersPage> {
   @override
   void initState() {
     super.initState();
-    context.read<MedicionesBloc>().add(GetMediciones());
+    context.read<UsersBloc>().add(GetUsers());
   }
 
   @override
@@ -23,7 +23,7 @@ class _MedicionesPageState extends State<MedicionesPage> {
       appBar: AppBar(
         title: const Text('Mediciones'),
       ),
-      body: BlocBuilder<MedicionesBloc, MedicionesState>(
+      body: BlocBuilder<UsersBloc, UsersState>(
         builder: (context, state) {
           if (state is Loading) {
             return const Center(
@@ -32,14 +32,14 @@ class _MedicionesPageState extends State<MedicionesPage> {
           } else if (state is Loaded) {
             return SingleChildScrollView(
               child: Column(
-                  children: state.mediciones.map((mediciones) {
+                  children: state.user.map((user) {
                 return Container(
                     margin: const EdgeInsets.all(10),
                     padding: const EdgeInsets.all(10),
                     color: Colors.blue,
                     child: ListTile(
-                      leading: Text(mediciones.id.toString()),
-                      title: Text(mediciones.userId.toString()),
+                      leading: Text(user.id.toString()),
+                      title: Text(user.name.toString()),
                     ));
               }).toList()),
             );
