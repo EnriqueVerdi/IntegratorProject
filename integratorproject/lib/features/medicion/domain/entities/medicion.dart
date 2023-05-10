@@ -19,4 +19,3 @@ class Medicion{
     required this.type,
   });
 }
-

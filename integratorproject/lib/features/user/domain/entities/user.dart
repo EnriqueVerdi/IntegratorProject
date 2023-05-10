@@ -33,4 +33,3 @@ class User{
     required this.postal,
   });
 }
-
