@@ -5,15 +5,18 @@ import 'package:http/http.dart' as http;
 import '../models/user_model.dart';
 
 abstract class UserRemoteDataSource {
-  // https://jsonplaceholder.typicode.com/posts
   Future<List<UserModel>> getUsers();
 }
 
 class UserRemoteDataSourceImp implements UserRemoteDataSource {
   @override
   Future<List<UserModel>> getUsers() async {
-    //print('DataSource');
-    var url = Uri.https('jsonplaceholder.typicode.com', '/posts');
+    var url = Uri(
+        scheme: 'http',
+        host: '192.168.127.193',
+        port: 3000,
+        path: '/api/user/get-all');
+
     var response = await http.get(url);
 
     if (response.statusCode == 200) {

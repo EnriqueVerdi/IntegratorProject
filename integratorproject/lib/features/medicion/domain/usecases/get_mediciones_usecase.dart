@@ -7,8 +7,8 @@ class GetMedicionesUsecase {
   final MedicionRepository repository;
 
   GetMedicionesUsecase(this.repository);
-  Future<List<Medicion>> execute() async {
-    return await repository.getMediciones();
+  Future<List<Medicion>> execute(int id) async {
+    return await repository.getMediciones(id);
   }
 
 }

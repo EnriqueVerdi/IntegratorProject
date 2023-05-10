@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -7,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/entities/user.dart';
 import '../../domain/usecases/get_users_usecase.dart';
-
 
 part 'users_event.dart';
 part 'users_state.dart';

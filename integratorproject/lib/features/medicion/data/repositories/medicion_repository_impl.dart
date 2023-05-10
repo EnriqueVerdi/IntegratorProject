@@ -10,14 +10,8 @@ class MedicionRepositoryImpl implements MedicionRepository {
   MedicionRepositoryImpl({required this.medicionRemoteDataSource});
 
   @override
-  Future<List<Medicion>> getMediciones() async {
-    //print('Repository');
-    return await medicionRemoteDataSource.getMediciones();
+  Future<List<Medicion>> getMediciones(int id) async {
+    return await medicionRemoteDataSource.getMediciones(id);
   }
 }
 
-@override
-postMedicion() {
-  // TODO: implement postUsers
-  throw UnimplementedError();
-}

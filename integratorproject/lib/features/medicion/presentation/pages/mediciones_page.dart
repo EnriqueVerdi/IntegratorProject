@@ -14,7 +14,7 @@ class _MedicionesPageState extends State<MedicionesPage> {
   @override
   void initState() {
     super.initState();
-    context.read<MedicionesBloc>().add(GetMediciones());
+    context.read<MedicionesBloc>().add(GetMediciones(id:1)); //acá debería ir el id del usuario
   }
 
   @override

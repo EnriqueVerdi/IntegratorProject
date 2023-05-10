@@ -5,20 +5,17 @@ import 'package:integratorproject/features/medicion/data/models/medicion_model.d
 
 abstract class MedicionRemoteDataSource {
   // https://jsonplaceholder.typicode.com/posts
-  Future<List<MedicionModel>> getMediciones();
+  Future<List<MedicionModel>> getMediciones(int id);
 }
 
 class MedicionRemoteDataSourceImp implements MedicionRemoteDataSource {
   @override
-  Future<List<MedicionModel>> getMediciones() async {
-    //print('DataSource');
-    var urlGet = '192.168.0.21:3000/api/mediciones/get';
+  Future<List<MedicionModel>> getMediciones(int id) async {
     var url = Uri(
         scheme: 'http',
         host: '192.168.0.21',
         port: 3000,
-        path: '/api/mediciones/get');
-    // var url = Uri.http('192.168.0.21:3000','/api/mediciones/get');
+        path: '/api/mediciones/get/$id');
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
