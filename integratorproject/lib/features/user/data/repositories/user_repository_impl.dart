@@ -1,5 +1,3 @@
-
-
 import '../../domain/entities/user.dart';
 import '../../domain/repositoriess/user_repository.dart';
 import '../datasources/user_remote_data_source.dart';
@@ -14,10 +12,9 @@ class UserRepositoryImpl implements UserRepository {
     //print('Repository');
     return await userRemoteDataSource.getUsers();
   }
-  
-  @override
-  Future<List<User>> postUsers() async {
 
+  @override
+  Future<User> postUsers() async {
     return await userRemoteDataSource.postUser();
   }
 }

@@ -1,6 +1,6 @@
 import '../entities/user.dart';
 
-abstract class UserRepository{
+abstract class UserRepository {
   Future<List<User>> getUsers();
-  Future<List<User>> postUsers();
+  Future<User> postUsers();
 }

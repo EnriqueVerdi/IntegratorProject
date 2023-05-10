@@ -6,7 +6,7 @@ class PostUsersUsecase {
 
   PostUsersUsecase(this.repository);
 
-  Future<List<User>> execute() async {
+  Future<User> execute() async {
     return await repository.postUsers();
   }
 }
