@@ -14,4 +14,10 @@ class UserRepositoryImpl implements UserRepository {
     //print('Repository');
     return await userRemoteDataSource.getUsers();
   }
+  
+  @override
+  postUsers() {
+    // TODO: implement postUsers
+    throw UnimplementedError();
+  }
 }
