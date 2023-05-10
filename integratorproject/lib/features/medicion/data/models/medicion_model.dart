@@ -2,7 +2,7 @@ import '../../domain/entities/medicion.dart';
 
 
 class MedicionModel extends Medicion {
-  MedicionModel({required int id, required int userId, required String lungRate, required String heartRate, required int temperature, required String date, required String time, required bool type})
+  MedicionModel({required int id, required int userId, required String lungRate, required String heartRate, required String temperature, required String date, required String time, required int type})
       : super(id: id, userId: userId, lungRate: lungRate, heartRate: heartRate, temperature: temperature, date: date, time: time, type: type );
 
   factory MedicionModel.fromJson(Map<String, dynamic> json) {

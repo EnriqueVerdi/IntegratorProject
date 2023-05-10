@@ -39,7 +39,8 @@ class _MedicionesPageState extends State<MedicionesPage> {
                     color: Colors.blue,
                     child: ListTile(
                       leading: Text(mediciones.id.toString()),
-                      title: Text(mediciones.userId.toString()),
+                      title: Text(mediciones.temperature.toString()),
+                      
                     ));
               }).toList()),
             );

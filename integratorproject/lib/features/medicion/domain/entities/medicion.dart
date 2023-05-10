@@ -3,10 +3,10 @@ class Medicion{
   final int userId;
   final String lungRate;
   final String heartRate;
-  final int temperature;
+  final String temperature;
   final String date;
   final String time;
-  final bool type;
+  final int type;
 
   Medicion({
     required this.id,
