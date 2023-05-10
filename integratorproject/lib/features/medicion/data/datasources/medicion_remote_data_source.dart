@@ -12,7 +12,7 @@ class MedicionRemoteDataSourceImp implements MedicionRemoteDataSource {
   @override
   Future<List<MedicionModel>> getMediciones() async {
     //print('DataSource');
-    var urlGet = '127.0.0.1/api/mediciones';
+    var urlGet = '127.0.0.1:3000/api/mediciones';
     var url = Uri.https(urlGet, '/get');
     var response = await http.get(url);
 

@@ -6,7 +6,7 @@ class MedicionModel extends Medicion {
       : super(id: id, userId: userId, lungRate: lungRate, heartRate: heartRate, temperature: temperature, date: date, time: time, type: type );
 
   factory MedicionModel.fromJson(Map<String, dynamic> json) {
-    return MedicionModel(id: json['id'], userId: json['id_user'], lungRate: json['saturacion_oxigeno'], heartRate: json['frecuencia_cardiaca'], temperature: json['temperatura'], date: json['fecha'], time: json['hora'], type: json['type']      );
+    return MedicionModel(id: json['id'], userId: json['userId'], lungRate: json['lungRate'], heartRate: json['heartRate'], temperature: json['temperature'], date: json['date'], time: json['time'], type: json['type']      );
   }
 
   factory MedicionModel.fromEntity(Medicion medicion) {
