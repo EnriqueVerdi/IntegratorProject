@@ -14,8 +14,11 @@ class UserRemoteDataSourceImp implements UserRemoteDataSource {
   @override
   Future<List<UserModel>> getUsers() async {
     //print('DataSource');
-    var url = Uri.https(
-        '127.0.0.1:3000/api/user/get-all/', ''); //acá se hace la peticion
+    var url = Uri(
+        scheme: 'http',
+        host: '192.168.0.21',
+        port: 3000,
+        path: '/api/user/get-all/');
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -30,8 +33,11 @@ class UserRemoteDataSourceImp implements UserRemoteDataSource {
 
   @override
   Future<UserModel> postUser() async {
-    var url = Uri.https(
-        '127.0.0.1:3000/api/user/register/', ''); //acá se hace la peticion
+    var url = Uri(
+        scheme: 'http',
+        host: '192.168.0.21',
+        port: 3000,
+        path: '/api/user/register/');
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
