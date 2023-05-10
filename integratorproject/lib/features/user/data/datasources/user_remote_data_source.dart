@@ -28,8 +28,17 @@ class UserRemoteDataSourceImp implements UserRemoteDataSource {
   }
   
   @override
-  Future<List<UserModel>> postUser() {
-    // TODO: implement postUser
-    throw UnimplementedError();
+  Future<List<UserModel>> postUser() async {
+    var url = Uri.https('http://127.0.0.1:3000/api/user/register/', ''); //acá se hace la peticion
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      return convert
+          .jsonDecode(response.body)
+          .map<UserModel>((data) => UserModel.fromJson(data))
+          .toList();
+    } else {
+      throw Exception();
+    }
   }
 }

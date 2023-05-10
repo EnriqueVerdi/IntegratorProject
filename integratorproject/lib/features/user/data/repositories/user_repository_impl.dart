@@ -16,8 +16,8 @@ class UserRepositoryImpl implements UserRepository {
   }
   
   @override
-  postUsers() {
-    // TODO: implement postUsers
-    throw UnimplementedError();
+  Future<List<User>> postUsers() async {
+
+    return await userRemoteDataSource.postUser();
   }
 }
