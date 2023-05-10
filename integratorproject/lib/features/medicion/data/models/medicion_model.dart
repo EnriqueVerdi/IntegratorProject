@@ -1,14 +1,15 @@
 import '../../domain/entities/medicion.dart';
 
-class UserModel extends Medicion {
-  UserModel({required int id, required int userId})
-      : super(id: id, userId: userId);
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(id: json['id'], userId: json['userId']);
+class MedicionModel extends Medicion {
+  MedicionModel({required int id, required int userId, required String lungRate, required String heartRate, required int temperature, required String date, required String time, required bool type})
+      : super(id: id, userId: userId, lungRate: lungRate, heartRate: heartRate, temperature: temperature, date: date, time: time, type: type );
+
+  factory MedicionModel.fromJson(Map<String, dynamic> json) {
+    return MedicionModel(id: json['id'], userId: json['id_user'], lungRate: json['saturacion_oxigeno'], heartRate: json['frecuencia_cardiaca'], temperature: json['temperatura'], date: json['fecha'], time: json['hora'], type: json['type']      );
   }
 
-  factory UserModel.fromEntity(Medicion medicion) {
-    return UserModel(id: medicion.id, userId: medicion.userId);
+  factory MedicionModel.fromEntity(Medicion medicion) {
+    return MedicionModel(id: medicion.id, userId: medicion.userId, lungRate: medicion.lungRate, heartRate: medicion.heartRate, temperature: medicion.temperature, date: medicion.date, time: medicion.time, type: medicion.type );
   }
 }
