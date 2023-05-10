@@ -15,3 +15,9 @@ class MedicionRepositoryImpl implements MedicionRepository {
     return await medicionRemoteDataSource.getMediciones();
   }
 }
+
+@override
+postMedicion() {
+  // TODO: implement postUsers
+  throw UnimplementedError();
+}
