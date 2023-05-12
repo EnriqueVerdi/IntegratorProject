@@ -9,13 +9,11 @@ abstract class MedicionRemoteDataSource {
 }
 
 class MedicionRemoteDataSourceImp implements MedicionRemoteDataSource {
+  final String apiURL = "v6bq6y-3000.csb.app";
+
   @override
   Future<List<MedicionModel>> getMediciones(int id) async {
-    var url = Uri(
-        scheme: 'http',
-        host: '192.168.0.21',
-        port: 3000,
-        path: '/api/mediciones/get/$id');
+    var url = Uri.https(apiURL, '/api/mediciones/get/$id');
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
