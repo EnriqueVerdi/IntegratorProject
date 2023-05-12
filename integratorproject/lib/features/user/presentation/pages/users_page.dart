@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:integratorproject/features/user/presentation/blocs/users_bloc.dart';
 
-
 class UsersPage extends StatefulWidget {
   const UsersPage({super.key});
 
@@ -31,18 +30,17 @@ class _UsersPageState extends State<UsersPage> {
             );
           } else if (state is Loaded) {
             return SingleChildScrollView(
-              child: Column(
-                  children: state.user.map((user) {
-                return Container(
-                    margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
-                    color: Colors.blue,
-                    child: ListTile(
-                      leading: Text(user.id.toString()),
-                      title: Text(user.name.toString()),
-                    ));
-              }).toList()),
-            );
+                child: Column(children: [
+              Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  color: Colors.blue,
+                  child: ListTile(
+                    leading: Text(state.user[0].id.toString()),
+                    title:
+                        Text('${state.user[0].name} ${state.user[0].lastname}'),
+                  ))
+            ]));
           } else if (state is Error) {
             return Center(
               child: Text(
