@@ -23,6 +23,7 @@ class MedicionesBloc extends Bloc<MedicionesEvent, MedicionesState> {
           emit(Loaded(mediciones: response));
         }catch(e){
           emit(Error(error: e.toString()));
+          print(e.toString());
         }
       }
     });

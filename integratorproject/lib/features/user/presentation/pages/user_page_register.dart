@@ -1,14 +1,12 @@
 // import 'package:actividad1/api/apiAuth.dart';
 import 'package:flutter/material.dart';
-import 'package:integratorproject/features/user/presentation/pages/user_page_login.dart';
-
 // import '../../models/user_model.dart';
 // import '../../services/register_interface.dart';
 // import '../../services/register_service.dart';
 // import 'package:actividad1/pages/login.dart';
 
 class UserPageRegister extends StatefulWidget {
-  UserPageRegister({Key? key}) : super(key: key);
+  const UserPageRegister({Key? key}) : super(key: key);
 
   @override
   State<UserPageRegister> createState() => _UserPageRegisterState();
@@ -37,6 +35,7 @@ class _UserPageRegisterState extends State<UserPageRegister> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
@@ -114,7 +113,6 @@ class _UserPageRegisterState extends State<UserPageRegister> {
                               },
                             ),
                           ),
-                         
                           Container(
                             alignment: Alignment.centerLeft,
                             padding: const EdgeInsets.symmetric(
@@ -445,7 +443,7 @@ class _UserPageRegisterState extends State<UserPageRegister> {
                               },
                             ),
                           ),
-                           Container(
+                          Container(
                             alignment: Alignment.centerLeft,
                             padding: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 0),
@@ -475,7 +473,6 @@ class _UserPageRegisterState extends State<UserPageRegister> {
                               },
                             ),
                           ),
-
                           Container(
                             alignment: Alignment.centerLeft,
                             padding: const EdgeInsets.symmetric(
@@ -557,7 +554,7 @@ class _UserPageRegisterState extends State<UserPageRegister> {
                                         TextSpan(
                                             text: "los términos y condiciones ",
                                             style: TextStyle(
-                                                color: Colors.pinkAccent)),
+                                                color: Color(0xffFF3941))),
                                         TextSpan(
                                             text: "\ny la ",
                                             style:
@@ -565,7 +562,7 @@ class _UserPageRegisterState extends State<UserPageRegister> {
                                         TextSpan(
                                             text: "política de privacidad",
                                             style: TextStyle(
-                                                color: Colors.pinkAccent)),
+                                                color: Color(0xffFF3941))),
                                       ],
                                     ),
                                   ),
@@ -585,7 +582,6 @@ class _UserPageRegisterState extends State<UserPageRegister> {
                               child: ElevatedButton(
                                   onPressed: () async {
                                     if (_check) {
-                                      
                                       // String result = await apiAuth.register(
                                       //     nombre,
                                       //     email,
@@ -601,12 +597,6 @@ class _UserPageRegisterState extends State<UserPageRegister> {
                                       //     institucion,
                                       //     seguroSocial,
                                       //     medicoTratante);
-
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const UserPageLogin()));
                                       await showDialog(
                                         context: context,
                                         builder: (context) => AlertDialog(
@@ -616,11 +606,7 @@ class _UserPageRegisterState extends State<UserPageRegister> {
                                             TextButton(
                                               child: const Text('Aceptar'),
                                               onPressed: () async {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            const UserPageLogin()));
+                                                Navigator.pop(context);
                                               },
                                             ),
                                           ],
@@ -665,12 +651,12 @@ class _UserPageRegisterState extends State<UserPageRegister> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, 'login');
+                                  Navigator.of(context).pushNamed('/login');
                                 },
                                 child: const Text(
                                   'Iniciar sesión',
                                   style: TextStyle(
-                                      color: Colors.pinkAccent, fontSize: 16),
+                                      color: Color(0xffFF3941), fontSize: 16),
                                 ),
                               )
                             ],

@@ -8,10 +8,7 @@ import 'package:integratorproject/features/user/presentation/pages/user_page_reg
 import 'package:integratorproject/usecase_config.dart';
 
 import 'features/medicion/presentation/blocs/mediciones_bloc.dart';
-import 'features/medicion/presentation/pages/mediciones_page.dart';
-
 import 'features/user/presentation/blocs/users_bloc.dart';
-import 'features/user/presentation/pages/users_page.dart';
 
 UsecaseConfig usecaseConfig = UsecaseConfig();
 
@@ -27,11 +24,12 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<MedicionesBloc>(
-          create: (BuildContext context) => 
-          MedicionesBloc(getMedicionesUsecase: usecaseConfig.getMedicionesUsecase!)),
+            create: (BuildContext context) => MedicionesBloc(
+                getMedicionesUsecase: usecaseConfig.getMedicionesUsecase!)),
         BlocProvider<UsersBloc>(
-          create: (BuildContext context) => 
-          UsersBloc(getUsersUsecase: usecaseConfig.getUsersUsecase!))
+            create: (BuildContext context) => UsersBloc(
+                getUsersUsecase: usecaseConfig.getUsersUsecase!,
+                postUsersUsecase: usecaseConfig.postUsersUsecase!))
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -39,12 +37,11 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        // home: const MedicionesPage(),
-        initialRoute: 'home',
+        home: const UserPageHome(),
         routes: {
-          'login': (context) => const UserPageLogin(),
-          'home': (context) => const UserPageHome(),
-          'register': (context) => UserPageRegister(),
+          '/login': (context) => const UserPageLogin(),
+          '/register': (context) => const UserPageRegister(),
+          '/profile': (context) => const MedicionesPage(),
         },
       ),
     );

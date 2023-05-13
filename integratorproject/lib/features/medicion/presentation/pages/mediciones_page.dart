@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../blocs/mediciones_bloc.dart';
+import 'package:integratorproject/features/medicion/presentation/blocs/mediciones_bloc.dart';
 
 class MedicionesPage extends StatefulWidget {
   const MedicionesPage({super.key});
@@ -11,11 +10,11 @@ class MedicionesPage extends StatefulWidget {
 }
 
 class _MedicionesPageState extends State<MedicionesPage> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<MedicionesBloc>().add(GetMediciones(id:1)); //acá debería ir el id del usuario
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   context.read<MedicionesBloc>().add(GetMediciones(id:1)); //acá debería ir el id del usuario
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +39,6 @@ class _MedicionesPageState extends State<MedicionesPage> {
                     child: ListTile(
                       leading: Text(mediciones.id.toString()),
                       title: Text(mediciones.temperature.toString()),
-                      
                     ));
               }).toList()),
             );
