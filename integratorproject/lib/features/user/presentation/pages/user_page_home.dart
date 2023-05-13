@@ -3,6 +3,8 @@
 // import 'package:actividad1/services/firebase_auth_methods.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:integratorproject/features/user/presentation/blocs/users_bloc.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:integratorproject/features/user/presentation/blocs/users_bloc.dart';
 // import 'package:integratorproject/features/user/presentation/pages/user_page_login.dart';
@@ -22,15 +24,17 @@ class UserPageHome extends StatefulWidget {
 class _UserPageHomeState extends State<UserPageHome> {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
+    final usersBloc = BlocProvider.of<UsersBloc>(context);
+    
     Future.delayed(const Duration(seconds: 3)).then((_) {
-      Navigator.pushNamed(context, '/login');
+      usersBloc.add(Login());
+      Navigator.of(context).pushNamed('/login');
     });
 
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
-        body: Container(
-      // padding: const EdgeInsets.symmetric(horizontal: 24),
+        body: SizedBox(
       width: size.width,
       height: size.height,
       child: LayoutBuilder(
@@ -75,37 +79,6 @@ class _UserPageHomeState extends State<UserPageHome> {
                         ),
                       ),
                     ),
-                    // Column(
-                    //   mainAxisAlignment: MainAxisAlignment.end,
-                    //   children: [
-                    //     Row(
-                    //       mainAxisAlignment: MainAxisAlignment.center,
-                    //       children: [
-                    //         Container(
-                    //             margin: const EdgeInsets.only(top: 20),
-                    //             child: TextButton(
-                    //               onPressed: () => {
-                    //                 // Navigator.push(
-                    //                 //   context,
-                    //                 //   MaterialPageRoute(
-                    //                 //       builder: (context) =>
-                    //                 //           const UserPageLogin()),
-                    //                 // )
-                    //               },
-                    //               child: const Text(
-                    //                 'Iniciar Sesión',
-                    //                 style: TextStyle(
-                    //                   color: Colors.white,
-                    //                   fontSize: 25,
-                    //                   fontWeight: FontWeight.bold,
-                    //                   fontFamily: 'Roboto',
-                    //                 ),
-                    //               ),
-                    //             )),
-                    //       ],
-                    //     ),
-                    //   ],
-                    // ),
                   ],
                 ),
               ),

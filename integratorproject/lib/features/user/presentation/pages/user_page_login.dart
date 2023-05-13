@@ -189,6 +189,7 @@ class _UserPageLoginState extends State<UserPageLogin> {
                                   //                 child: const Text('Cancelar'))
                                   //           ],
                                   //         ));
+                                  medicionesBloc.add(GetMediciones(id: 1));
                                   await showDialog(
                                       context: context,
                                       builder: (context) => AlertDialog(
@@ -200,8 +201,6 @@ class _UserPageLoginState extends State<UserPageLogin> {
                                                   onPressed: () {
                                                     Navigator.pushNamed(
                                                         context, '/profile');
-                                                    medicionesBloc.add(
-                                                        GetMediciones(id: 1));
                                                   },
                                                   child: const Text('Cerrar'))
                                             ],

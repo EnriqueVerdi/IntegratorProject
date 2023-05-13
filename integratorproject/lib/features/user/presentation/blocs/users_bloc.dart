@@ -24,21 +24,6 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
           emit(Error(error: e.toString()));
         }
       }
-      // else if (event is GetUsers) {
-      //   try {
-      //     List<User> response = await getUsersUsecase.execute();
-      //     emit(Loaded(user: response));
-      //   } catch (e) {
-      //     emit(Error(error: e.toString()));
-      //   }
-      // }
-      // else {
-      //   try {
-      //     emit(ShowHome());
-      //   } catch (e) {
-      //     emit(Error(error: e.toString()));
-      //   }
-      // }
     });
   }
 }

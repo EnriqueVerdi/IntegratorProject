@@ -9,7 +9,7 @@ abstract class MedicionRemoteDataSource {
 }
 
 class MedicionRemoteDataSourceImp implements MedicionRemoteDataSource {
-  final String apiURL = "v6bq6y-3000.csb.app";
+  final String apiURL = "v6bq6y-3001.csb.app";
 
   @override
   Future<List<MedicionModel>> getMediciones(int id) async {

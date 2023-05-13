@@ -37,8 +37,9 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const UserPageHome(),
+        initialRoute: '/',
         routes: {
+          '/': (context) => const UserPageHome(),
           '/login': (context) => const UserPageLogin(),
           '/register': (context) => const UserPageRegister(),
           '/profile': (context) => const MedicionesPage(),

@@ -10,7 +10,7 @@ abstract class UserRemoteDataSource {
 }
 
 class UserRemoteDataSourceImp implements UserRemoteDataSource {
-  final String apiURL = "v6bq6y-3000.csb.app";
+  final String apiURL = "v6bq6y-3001.csb.app";
 
   @override
   Future<List<UserModel>> getUsers() async {
@@ -32,11 +32,8 @@ class UserRemoteDataSourceImp implements UserRemoteDataSource {
   Future<UserModel> postUser() async {
     var url = Uri.https(apiURL, '/api/user/register/');
     var response = await http.post(url,
-      headers: {'Content-Type': 'application/json'},
-      body: convert.jsonEncode({
-        'campo' : 'valor'
-      }
-    ));
+        headers: {'Content-Type': 'application/json'},
+        body: convert.jsonEncode({'campo': 'valor'}));
 
     if (response.statusCode == 200) {
       return convert

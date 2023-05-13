@@ -601,11 +601,11 @@ class _UserPageRegisterState extends State<UserPageRegister> {
                                         context: context,
                                         builder: (context) => AlertDialog(
                                           title: const Text('Registro'),
-                                          // content: Text(result),
+                                          content: const Text('text'),
                                           actions: [
                                             TextButton(
                                               child: const Text('Aceptar'),
-                                              onPressed: () async {
+                                              onPressed: () {
                                                 Navigator.pop(context);
                                               },
                                             ),
@@ -651,7 +651,7 @@ class _UserPageRegisterState extends State<UserPageRegister> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  Navigator.of(context).pushNamed('/login');
+                                  Navigator.pushNamed(context,'/login');
                                 },
                                 child: const Text(
                                   'Iniciar sesión',
