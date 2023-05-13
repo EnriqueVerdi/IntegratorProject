@@ -23,13 +23,11 @@ class _UserPageHomeState extends State<UserPageHome> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-        body: Container(
+      body: Container(
       // padding: const EdgeInsets.symmetric(horizontal: 24),
       width: size.width,
       height: size.height,
-      // decoration: const BoxDecoration(color: Color(0xffffffff)),
       child: Container(
-        // padding: const EdgeInsets.only(right: 10, left: 8),
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints viewportConstrains) {
             return SingleChildScrollView(

@@ -20,6 +20,7 @@ class _UserPageLoginState extends State<UserPageLogin> {
   // final ILogin loginService = LoginService();
   bool _isObscure = true;
   String email = "";
+  // TextEditingController email = 
   String password = "";
   // final ApiAuth apiAuth = ApiAuth();
   // final Logger _logger = Logger();

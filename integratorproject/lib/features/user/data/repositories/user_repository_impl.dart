@@ -9,7 +9,6 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<List<User>> getUsers() async {
-    //print('Repository');
     return await userRemoteDataSource.getUsers();
   }
 

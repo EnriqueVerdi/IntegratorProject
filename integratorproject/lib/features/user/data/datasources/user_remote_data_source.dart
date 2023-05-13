@@ -10,14 +10,12 @@ abstract class UserRemoteDataSource {
 }
 
 class UserRemoteDataSourceImp implements UserRemoteDataSource {
+  final String apiURL = "v6bq6y-3000.csb.app";
+
   @override
   Future<List<UserModel>> getUsers() async {
     //print('DataSource');
-    var url = Uri(
-        scheme: 'http',
-        host: '192.168.127.193',
-        port: 3000,
-        path: '/api/user/get-all');
+    var url = Uri.https(apiURL, '/api/user/get-all');
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -32,13 +30,13 @@ class UserRemoteDataSourceImp implements UserRemoteDataSource {
 
   @override
   Future<UserModel> postUser() async {
-    var url = Uri(
-        scheme: 'http',
-        host: '192.168.127.193',
-        port: 3000,
-        path: '/api/user/register/');
-
-    var response = await http.get(url);
+    var url = Uri.https(apiURL, '/api/user/register/');
+    var response = await http.post(url,
+      headers: {'Content-Type': 'application/json'},
+      body: convert.jsonEncode({
+        'campo' : 'valor'
+      }
+    ));
 
     if (response.statusCode == 200) {
       return convert
@@ -49,14 +47,8 @@ class UserRemoteDataSourceImp implements UserRemoteDataSource {
     }
   }
 
-  @override
   Future<UserModel> getUser() async {
-    // var url = Uri(
-    // scheme: 'http',
-    // host: '192.168.127.193',
-    // port: 3000,
-    // path: '/api/user/');
-    var url = Uri.http('192.168.127.193:3000', '/api/user/2');
+    var url = Uri.https(apiURL, '/api/user/2');
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
