@@ -1,14 +1,12 @@
+import 'package:integratorproject/usercase_config.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:integratorproject/features/medicion/presentation/pages/mediciones_page.dart';
-import 'package:integratorproject/features/user/presentation/pages/user_page_home.dart';
-import 'package:integratorproject/features/user/presentation/pages/user_page_login.dart';
-import 'package:integratorproject/features/user/presentation/pages/user_page_register.dart';
-import 'package:integratorproject/usecase_config.dart';
 
-import 'features/medicion/presentation/blocs/mediciones_bloc.dart';
-import 'features/user/presentation/blocs/users_bloc.dart';
+import 'features/tareas/presentation/bloc/tareas_bloc.dart';
+import 'features/tareas/presentation/pages/tareas_page.dart';
+
 
 UsecaseConfig usecaseConfig = UsecaseConfig();
 
@@ -23,27 +21,23 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<MedicionesBloc>(
-            create: (BuildContext context) => MedicionesBloc(
-                getMedicionesUsecase: usecaseConfig.getMedicionesUsecase!)),
-        BlocProvider<UsersBloc>(
-            create: (BuildContext context) => UsersBloc(
-                getUsersUsecase: usecaseConfig.getUsersUsecase!,
-                postUsersUsecase: usecaseConfig.postUsersUsecase!))
+        BlocProvider<TareasBloc>(
+            create: (BuildContext context) =>
+                TareasBloc(getTareasUsecase: usecaseConfig.getTareasUsecase!)),
+        BlocProvider<TareasBlocModify>(
+          create: (BuildContext context) => TareasBlocModify(
+              addTareaUsecase: usecaseConfig.addTareaUsecase!,
+              updateTareaUsecase: usecaseConfig.updateTareaUsecase!,
+              deleteTareaUsecase: usecaseConfig.deleteTareaUsecase!),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.deepPurple,
         ),
-        initialRoute: '/',
-        routes: {
-          '/': (context) => const UserPageHome(),
-          '/login': (context) => const UserPageLogin(),
-          '/register': (context) => const UserPageRegister(),
-          '/profile': (context) => const MedicionesPage(),
-        },
+        home: const PostsPage(),
       ),
     );
   }
