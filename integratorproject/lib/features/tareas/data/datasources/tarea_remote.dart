@@ -3,7 +3,6 @@ import 'dart:convert' as convert;
 import 'package:integratorproject/features/tareas/data/models/tarea_model.dart';
 import 'package:integratorproject/features/tareas/domain/entities/tarea.dart';
 
-
 String apiURI = ' https://sftonr-3000.csb.app';
 
 abstract class TareaRemoteDataSource {
@@ -19,10 +18,11 @@ class TareaRemoteDataSourceImp implements TareaRemoteDataSource {
     var url = Uri.https(apiURI, '/api/tareas');
     var response = await http.get(url);
 
-    if(response.statusCode == 200) {
-      return convert.jsonDecode(response.body)
-              .map<TareaModel>((data) => TareaModel.fromJson(data))
-              .toList();
+    if (response.statusCode == 200) {
+      return convert
+          .jsonDecode(response.body)
+          .map<TareaModel>((data) => TareaModel.fromJson(data))
+          .toList();
     } else {
       throw Exception('Error');
     }
@@ -32,11 +32,13 @@ class TareaRemoteDataSourceImp implements TareaRemoteDataSource {
   Future<void> addTarea(Tarea tarea) async {
     var url = Uri.https(apiURI, '/api/tareas');
     var body = {
-      'title': tarea.title,
-      'body': tarea.body,
+      'titulo': tarea.titulo,
+      'descripcion': tarea.descripcion,
+      'estado': tarea.estado
     };
     var headers = {'Content-Type': 'application/json'};
-    var response = await http.post(url, body: convert.jsonEncode(body), headers: headers);
+    var response =
+        await http.post(url, body: convert.jsonEncode(body), headers: headers);
 
     // print(response.body.toString());
     print('Added');
@@ -46,11 +48,13 @@ class TareaRemoteDataSourceImp implements TareaRemoteDataSource {
   Future<void> updateTarea(Tarea tarea) async {
     var url = Uri.https(apiURI, '/api/note/${tarea.id}');
     var body = {
-      'title': tarea.title,
-      'body': tarea.body,
+      'titulo': tarea.titulo,
+      'descripcion': tarea.descripcion,
+      'estado': tarea.estado
     };
     var headers = {'Content-Type': 'application/json'};
-    var response = await http.patch(url, body: convert.jsonEncode(body), headers: headers);
+    var response =
+        await http.patch(url, body: convert.jsonEncode(body), headers: headers);
 
     // print(response.body.toString());
     print('Updated');

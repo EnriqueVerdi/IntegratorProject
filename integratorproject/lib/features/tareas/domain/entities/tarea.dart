@@ -1,11 +1,13 @@
 class Tarea {
   final int id;
-  final String title;
-  final String body;
+  final String titulo;
+  final String descripcion;
+  final int estado;
 
   Tarea({
     required this.id,
-    required this.title,
-    required this.body,
+    required this.titulo,
+    required this.descripcion,
+    required this.estado,
   });
 }

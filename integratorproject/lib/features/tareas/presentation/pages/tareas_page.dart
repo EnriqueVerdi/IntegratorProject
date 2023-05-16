@@ -40,7 +40,7 @@ class _PostsPageState extends State<PostsPage> {
           IconButton(
             icon: Image.asset('assets/images/pencil_icon.png'),
             iconSize: 35,
-            tooltip: 'Agregar nota',
+            tooltip: 'Agregar tarea',
             onPressed: () {
               createTareaPopUp(context);
             },
@@ -71,9 +71,10 @@ class _PostsPageState extends State<PostsPage> {
               child: Column(
                   children: state.tareas.map((tarea) {
                 TextEditingController tareaTitle =
-                    TextEditingController(text: tarea.title);
+                    TextEditingController(text: tarea.titulo);
                 TextEditingController tareaBody =
-                    TextEditingController(text: tarea.body);
+                    TextEditingController(text: tarea.descripcion);
+                    
                 return Container(
                   margin: const EdgeInsets.only(left: 5, right: 5, bottom: 15),
                   padding: const EdgeInsets.all(5),
@@ -95,13 +96,13 @@ class _PostsPageState extends State<PostsPage> {
                   child: ListTile(
                     // leading: Text(note.id.toString()),
                     title: Text(
-                      tarea.title,
+                      tarea.titulo,
                       style: const TextStyle(
                           color: Color.fromARGB(185, 255, 255, 255),
                           fontSize: 20),
                     ),
                     subtitle: Text(
-                      tarea.body,
+                      tarea.descripcion,
                       style: const TextStyle(
                           color: Color.fromARGB(140, 255, 255, 255)),
                     ),
@@ -175,11 +176,12 @@ class _PostsPageState extends State<PostsPage> {
                                       onPressed: () async {
                                         var tareaUpdate = Tarea(
                                             id: tarea.id,
-                                            title: tareaTitle.text,
-                                            body: tareaBody.text);
+                                            titulo: tareaTitle.text,
+                                            descripcion: tareaBody.text,estado: 0);
                                         BlocProvider.of<TareasBlocModify>(
                                                 context)
-                                            .add(UpdateTarea(tarea: tareaUpdate));
+                                            .add(UpdateTarea(
+                                                tarea: tareaUpdate));
                                         Navigator.of(context).pop();
                                         await Future.delayed(const Duration(
                                                 milliseconds: 95))
@@ -222,7 +224,7 @@ class _PostsPageState extends State<PostsPage> {
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   content: Text(
-                                      '¿Está seguro de que desea eliminar ${tarea.title}?'),
+                                      '¿Está seguro de que desea eliminar ${tarea.titulo}?'),
                                   actions: <Widget>[
                                     TextButton(
                                       child: const Text(
@@ -344,8 +346,11 @@ class _PostsPageState extends State<PostsPage> {
             ),
             ElevatedButton(
               onPressed: () async {
-                var tarea =
-                    Tarea(id: 0, title: tareaTitle.text, body: tareaBody.text);
+                var tarea = Tarea(
+                    id: 0,
+                    titulo: tareaTitle.text,
+                    descripcion: tareaBody.text,
+                    estado: 0);
                 BlocProvider.of<TareasBlocModify>(context)
                     .add(AddTareas(tarea: tarea));
                 Navigator.of(context).pop();
