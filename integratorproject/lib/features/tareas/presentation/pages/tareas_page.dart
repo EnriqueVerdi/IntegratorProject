@@ -126,10 +126,10 @@ class _PostsPageState extends State<PostsPage> {
                       padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
-                        color: const Color.fromARGB(255, 34, 34, 36),
+                        color: const Color(0xffDBE8FF),
                         boxShadow: const [
                           BoxShadow(
-                            color: Color.fromARGB(255, 17, 17, 17),
+                            color: Color(0xff27496D),
                             blurRadius: 4.0, // soften the shadow
                             spreadRadius: -1.5, //extend the shadow
                             offset: Offset(
@@ -143,13 +143,11 @@ class _PostsPageState extends State<PostsPage> {
                         title: Text(
                           tarea.titulo,
                           style: const TextStyle(
-                              color: Color.fromARGB(185, 255, 255, 255),
-                              fontSize: 20),
+                              color: Color(0xff4A72A0), fontSize: 20),
                         ),
                         subtitle: Text(
                           tarea.descripcion,
-                          style: const TextStyle(
-                              color: Color.fromARGB(140, 255, 255, 255)),
+                          style: const TextStyle(color: Color(0xff6C9BD2)),
                         ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -157,27 +155,26 @@ class _PostsPageState extends State<PostsPage> {
                             IconButton(
                               icon: const Icon(
                                 Icons.edit,
-                                color: Colors.white70,
+                                color: Color(0xFF27496D),
                               ),
                               onPressed: () {
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      backgroundColor:
-                                          const Color.fromARGB(255, 34, 34, 36),
+                                      backgroundColor: const Color(0xffDBE8FF),
                                       title: Row(
                                         children: const [
                                           Icon(
                                             Icons.edit,
-                                            color: Colors.white70,
+                                            color: Color(0xFF27496D),
                                           ),
                                           SizedBox(width: 10),
                                           Text(
-                                            'Editar nota',
+                                            'Editar tarea',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.white70),
+                                                color: Color(0xff4A72A0)),
                                           ),
                                         ],
                                       ),
@@ -189,22 +186,24 @@ class _PostsPageState extends State<PostsPage> {
                                               controller: tareaTitle,
                                               maxLength: 20,
                                               style: const TextStyle(
-                                                  color: Colors.white70),
+                                                  color: Color(0xff4A72A0)),
                                               decoration: const InputDecoration(
                                                 hintText: 'Titulo',
                                                 hintStyle: TextStyle(
-                                                    color: Colors.white38),
+                                                    color: Color.fromRGBO(
+                                                        74, 114, 160, 0.6)),
                                               ),
                                             ),
                                             TextField(
                                               controller: tareaBody,
                                               maxLength: 80,
                                               style: const TextStyle(
-                                                  color: Colors.white70),
+                                                  color: Color(0xff4A72A0)),
                                               decoration: const InputDecoration(
                                                 hintText: 'Descripción',
                                                 hintStyle: TextStyle(
-                                                    color: Colors.white38),
+                                                    color: Color.fromRGBO(
+                                                        74, 114, 160, 0.6)),
                                               ),
                                             ),
                                           ],
@@ -238,7 +237,8 @@ class _PostsPageState extends State<PostsPage> {
                                           },
                                           style: ElevatedButton.styleFrom(
                                             foregroundColor: Colors.white,
-                                            backgroundColor: Colors.deepPurple,
+                                            backgroundColor:
+                                                const Color(0xff27496D),
                                             shape: (RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(5),
@@ -255,7 +255,7 @@ class _PostsPageState extends State<PostsPage> {
                             IconButton(
                               icon: const Icon(
                                 Icons.delete,
-                                color: Colors.white70,
+                                color: Color(0xFF27496D),
                               ),
                               onPressed: () async {
                                 showDialog(
