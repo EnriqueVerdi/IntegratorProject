@@ -23,22 +23,24 @@ class _PostsPageState extends State<PostsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 22, 22, 22),
+      backgroundColor: const Color(0xFFE4F3FF),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 22, 22, 22),
+        backgroundColor: const Color(0xFFE4F3FF),
         elevation: 0,
         toolbarHeight: 110,
         title: const Padding(
           padding: EdgeInsets.only(left: 12),
           child: Text(
             'Mis Tareas',
-            style: TextStyle(
-                fontSize: 30, color: Color.fromARGB(220, 255, 255, 255)),
+            style: TextStyle(fontSize: 30, color: Color(0xFF27496D)),
           ),
         ),
         actions: <Widget>[
           IconButton(
-            icon: Image.asset('assets/images/pencil_icon.png'),
+            icon: const Icon(
+              Icons.add,
+              color: Color(0xFF27496D),
+            ),
             iconSize: 35,
             tooltip: 'Agregar tarea',
             onPressed: () {
@@ -50,7 +52,7 @@ class _PostsPageState extends State<PostsPage> {
             child: IconButton(
               icon: const Icon(Icons.refresh),
               iconSize: 30,
-              color: const Color.fromARGB(220, 255, 255, 255),
+              color: const Color(0xFF27496D),
               tooltip: 'Actualizar lista',
               onPressed: () async {
                 BlocProvider.of<TareasBloc>(context).add(GetTareas());
@@ -74,16 +76,16 @@ class _PostsPageState extends State<PostsPage> {
                     TextEditingController(text: tarea.titulo);
                 TextEditingController tareaBody =
                     TextEditingController(text: tarea.descripcion);
-                    
+
                 return Container(
                   margin: const EdgeInsets.only(left: 5, right: 5, bottom: 15),
                   padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
-                    color: const Color.fromARGB(255, 34, 34, 36),
+                    color: const Color(0xffDBE8FF),
                     boxShadow: const [
                       BoxShadow(
-                        color: Color.fromARGB(255, 17, 17, 17),
+                        color: Color(0xffECECEC),
                         blurRadius: 4.0, // soften the shadow
                         spreadRadius: -1.5, //extend the shadow
                         offset: Offset(
@@ -98,13 +100,11 @@ class _PostsPageState extends State<PostsPage> {
                     title: Text(
                       tarea.titulo,
                       style: const TextStyle(
-                          color: Color.fromARGB(185, 255, 255, 255),
-                          fontSize: 20),
+                          color: Color(0xff4A72A0), fontSize: 20),
                     ),
                     subtitle: Text(
                       tarea.descripcion,
-                      style: const TextStyle(
-                          color: Color.fromARGB(140, 255, 255, 255)),
+                      style: const TextStyle(color: Color(0xff6C9BD2)),
                     ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -112,7 +112,7 @@ class _PostsPageState extends State<PostsPage> {
                         IconButton(
                           icon: const Icon(
                             Icons.edit,
-                            color: Colors.white70,
+                            color: Color(0xff27496D),
                           ),
                           onPressed: () {
                             showDialog(
@@ -177,7 +177,8 @@ class _PostsPageState extends State<PostsPage> {
                                         var tareaUpdate = Tarea(
                                             id: tarea.id,
                                             titulo: tareaTitle.text,
-                                            descripcion: tareaBody.text,estado: 0);
+                                            descripcion: tareaBody.text,
+                                            estado: 0);
                                         BlocProvider.of<TareasBlocModify>(
                                                 context)
                                             .add(UpdateTarea(
@@ -211,7 +212,7 @@ class _PostsPageState extends State<PostsPage> {
                         IconButton(
                           icon: const Icon(
                             Icons.delete,
-                            color: Colors.white70,
+                            color: Color(0xff27496D),
                           ),
                           onPressed: () async {
                             showDialog(

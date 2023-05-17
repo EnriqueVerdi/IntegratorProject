@@ -3,7 +3,7 @@ import 'dart:convert' as convert;
 import 'package:integratorproject/features/tareas/data/models/tarea_model.dart';
 import 'package:integratorproject/features/tareas/domain/entities/tarea.dart';
 
-String apiURI = ' https://sftonr-3000.csb.app';
+String apiURL = 'sftonr-3000.csb.app';
 
 abstract class TareaRemoteDataSource {
   Future<List<TareaModel>> getTareas();
@@ -15,7 +15,7 @@ abstract class TareaRemoteDataSource {
 class TareaRemoteDataSourceImp implements TareaRemoteDataSource {
   @override
   Future<List<TareaModel>> getTareas() async {
-    var url = Uri.https(apiURI, '/api/tareas');
+    var url = Uri.https(apiURL, '/api/tareas');
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -30,7 +30,7 @@ class TareaRemoteDataSourceImp implements TareaRemoteDataSource {
 
   @override
   Future<void> addTarea(Tarea tarea) async {
-    var url = Uri.https(apiURI, '/api/tareas');
+    var url = Uri.https(apiURL, '/api/tareas');
     var body = {
       'titulo': tarea.titulo,
       'descripcion': tarea.descripcion,
@@ -46,15 +46,16 @@ class TareaRemoteDataSourceImp implements TareaRemoteDataSource {
 
   @override
   Future<void> updateTarea(Tarea tarea) async {
-    var url = Uri.https(apiURI, '/api/note/${tarea.id}');
+    var url = Uri.https(apiURL, '/api/tareas/');
     var body = {
+      'id': tarea.id,
       'titulo': tarea.titulo,
       'descripcion': tarea.descripcion,
       'estado': tarea.estado
     };
     var headers = {'Content-Type': 'application/json'};
     var response =
-        await http.patch(url, body: convert.jsonEncode(body), headers: headers);
+        await http.put(url, body: convert.jsonEncode(body), headers: headers);
 
     // print(response.body.toString());
     print('Updated');
@@ -62,7 +63,7 @@ class TareaRemoteDataSourceImp implements TareaRemoteDataSource {
 
   @override
   Future<void> deleteTarea(Tarea tarea) async {
-    var url = Uri.https(apiURI, '/api/tareas/${tarea.id}');
+    var url = Uri.https(apiURL, '/api/tareas/${tarea.id}');
     var response = await http.delete(url);
 
     // print(response.body.toString());
