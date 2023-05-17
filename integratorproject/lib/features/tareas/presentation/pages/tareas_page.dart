@@ -343,19 +343,19 @@ class _PostsPageState extends State<PostsPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: const Color.fromARGB(255, 34, 34, 36),
+          backgroundColor: const Color(0xffDBE8FF),
           title: Row(
             children: const [
               Icon(
                 Icons.edit,
-                color: Colors.white70,
+                color: Color(0xFF27496D),
               ),
               SizedBox(width: 10),
               Text(
                 'Añadir nota',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.white70,
+                  color: Color(0xff4A72A0),
                 ),
               ),
             ],
@@ -367,19 +367,21 @@ class _PostsPageState extends State<PostsPage> {
                 TextField(
                   controller: tareaTitle,
                   maxLength: 20,
-                  style: const TextStyle(color: Colors.white70),
+                  style: const TextStyle(color: Color(0xff4A72A0)),
                   decoration: const InputDecoration(
                     hintText: 'Titulo',
-                    hintStyle: TextStyle(color: Colors.white38),
+                    hintStyle:
+                        TextStyle(color: Color.fromRGBO(74, 114, 160, 0.6)),
                   ),
                 ),
                 TextField(
                   controller: tareaBody,
                   maxLength: 80,
-                  style: const TextStyle(color: Colors.white70),
+                  style: const TextStyle(color: Color(0xff4A72A0)),
                   decoration: const InputDecoration(
                     hintText: 'Descripción',
-                    hintStyle: TextStyle(color: Colors.white38),
+                    hintStyle:
+                        TextStyle(color: Color.fromRGBO(74, 114, 160, 0.6)),
                   ),
                 ),
               ],
@@ -407,8 +409,8 @@ class _PostsPageState extends State<PostsPage> {
                         BlocProvider.of<TareasBloc>(context).add(GetTareas()));
               },
               style: ElevatedButton.styleFrom(
-                foregroundColor: const Color.fromARGB(220, 255, 255, 255),
-                backgroundColor: Colors.deepPurple,
+                foregroundColor: Colors.white,
+                backgroundColor: const Color(0xff27496D),
                 shape: (RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(7),
                 )),
