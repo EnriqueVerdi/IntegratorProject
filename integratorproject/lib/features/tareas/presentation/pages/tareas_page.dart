@@ -57,7 +57,6 @@ class _PostsPageState extends State<PostsPage> {
     setState(() {
       _connectionStatus = result;
     });
-    print(_connectionStatus);
   }
 
   @override
@@ -107,224 +106,7 @@ class _PostsPageState extends State<PostsPage> {
             child: CircularProgressIndicator(),
           );
         } else if (state is Loaded) {
-          return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 5, left: 15, right: 15),
-              child: Column(
-                children: [
-                  Text("Connectivity: ${_connectionStatus.toString()}"),
-                  Column(
-                      children: state.tareas.map((tarea) {
-                    TextEditingController tareaTitle =
-                        TextEditingController(text: tarea.titulo);
-                    TextEditingController tareaBody =
-                        TextEditingController(text: tarea.descripcion);
-
-                    return Container(
-                      margin:
-                          const EdgeInsets.only(left: 5, right: 5, bottom: 15),
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        color: const Color(0xffDBE8FF),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0xff27496D),
-                            blurRadius: 4.0, // soften the shadow
-                            spreadRadius: -1.5, //extend the shadow
-                            offset: Offset(
-                              0.5,
-                              2.5,
-                            ),
-                          )
-                        ],
-                      ),
-                      child: ListTile(
-                        title: Text(
-                          tarea.titulo,
-                          style: const TextStyle(
-                              color: Color(0xff4A72A0), fontSize: 20),
-                        ),
-                        subtitle: Text(
-                          tarea.descripcion,
-                          style: const TextStyle(color: Color(0xff6C9BD2)),
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(
-                                Icons.edit,
-                                color: Color(0xFF27496D),
-                              ),
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      backgroundColor: const Color(0xffDBE8FF),
-                                      title: Row(
-                                        children: const [
-                                          Icon(
-                                            Icons.edit,
-                                            color: Color(0xFF27496D),
-                                          ),
-                                          SizedBox(width: 10),
-                                          Text(
-                                            'Editar tarea',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Color(0xff4A72A0)),
-                                          ),
-                                        ],
-                                      ),
-                                      content: SizedBox(
-                                        height: 150,
-                                        child: Column(
-                                          children: [
-                                            TextField(
-                                              controller: tareaTitle,
-                                              maxLength: 20,
-                                              style: const TextStyle(
-                                                  color: Color(0xff4A72A0)),
-                                              decoration: const InputDecoration(
-                                                hintText: 'Titulo',
-                                                hintStyle: TextStyle(
-                                                    color: Color.fromRGBO(
-                                                        74, 114, 160, 0.6)),
-                                              ),
-                                            ),
-                                            TextField(
-                                              controller: tareaBody,
-                                              maxLength: 80,
-                                              style: const TextStyle(
-                                                  color: Color(0xff4A72A0)),
-                                              decoration: const InputDecoration(
-                                                hintText: 'Descripción',
-                                                hintStyle: TextStyle(
-                                                    color: Color.fromRGBO(
-                                                        74, 114, 160, 0.6)),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text('Cancelar'),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () async {
-                                            var tareaUpdate = Tarea(
-                                                id: tarea.id,
-                                                titulo: tareaTitle.text,
-                                                descripcion: tareaBody.text,
-                                                estado: 0);
-                                            BlocProvider.of<TareasBlocModify>(
-                                                    context)
-                                                .add(UpdateTarea(
-                                                    tarea: tareaUpdate));
-                                            Navigator.of(context).pop();
-                                            await Future.delayed(const Duration(
-                                                    milliseconds: 95))
-                                                .then((value) =>
-                                                    BlocProvider.of<TareasBloc>(
-                                                            context)
-                                                        .add(GetTareas()));
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            foregroundColor: Colors.white,
-                                            backgroundColor:
-                                                const Color(0xff27496D),
-                                            shape: (RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                            )),
-                                          ),
-                                          child: const Text('Actualizar'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(
-                                Icons.delete,
-                                color: Color(0xFF27496D),
-                              ),
-                              onPressed: () async {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text(
-                                        'Confirmación',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      content: Text(
-                                          '¿Está seguro de que desea eliminar ${tarea.titulo}?'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: const Text(
-                                            'Cancelar',
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                          ),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                        OutlinedButton(
-                                          style: OutlinedButton.styleFrom(
-                                            side: const BorderSide(
-                                                color: Colors
-                                                    .red), // borde del botón
-                                            backgroundColor: Colors
-                                                .red, // color de fondo del botón
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                            ),
-                                          ),
-                                          child: const Text(
-                                            'Eliminar',
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                          onPressed: () async {
-                                            BlocProvider.of<TareasBlocModify>(
-                                                    context)
-                                                .add(DeleteTarea(tarea: tarea));
-                                            Navigator.of(context).pop();
-                                            await Future.delayed(const Duration(
-                                                    milliseconds: 95))
-                                                .then((value) =>
-                                                    BlocProvider.of<TareasBloc>(
-                                                            context)
-                                                        .add(GetTareas()));
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }).toList()),
-                ],
-              ),
-            ),
-          );
+          return SingleChildScrollView(child: _buildContent(context, state));
         } else if (state is Error) {
           return Center(
             child: Text(state.error, style: const TextStyle(color: Colors.red)),
@@ -421,5 +203,231 @@ class _PostsPageState extends State<PostsPage> {
         );
       },
     );
+  }
+
+  Widget _buildContent(BuildContext context, TareasState state) {
+    if (_connectionStatus == ConnectivityResult.none) {
+      return Column(
+        //acciones cuando no hay conexion
+        children: const [Text('Menso, no hay conexion')],
+      );
+    } else {
+      //acciones cuando si hay conexión
+      return _onlineContent(context, state);
+    }
+  }
+
+  Widget _onlineContent(BuildContext context, TareasState state) {
+    if (state is Loaded) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 5, left: 15, right: 15),
+        child: Column(children: [
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 5.0),
+            child: Text("Online",
+                style: TextStyle(
+                    color: Color(0xFF27496D),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15.0)),
+          ),
+          //Debajo se agrega el listado de tareas
+          ...state.tareas.map((tarea) {
+            TextEditingController tareaTitle =
+                TextEditingController(text: tarea.titulo);
+            TextEditingController tareaBody =
+                TextEditingController(text: tarea.descripcion);
+            return Container(
+              margin: const EdgeInsets.only(left: 5, right: 5, bottom: 15),
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: const Color(0xffDBE8FF),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0xff27496D),
+                    blurRadius: 4.0, // soften the shadow
+                    spreadRadius: -1.5, //extend the shadow
+                    offset: Offset(
+                      0.5,
+                      2.5,
+                    ),
+                  )
+                ],
+              ),
+              child: ListTile(
+                title: Text(
+                  tarea.titulo,
+                  style:
+                      const TextStyle(color: Color(0xff4A72A0), fontSize: 20),
+                ),
+                subtitle: Text(
+                  tarea.descripcion,
+                  style: const TextStyle(color: Color(0xff6C9BD2)),
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.edit,
+                        color: Color(0xFF27496D),
+                      ),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              backgroundColor: const Color(0xffDBE8FF),
+                              title: Row(
+                                children: const [
+                                  Icon(
+                                    Icons.edit,
+                                    color: Color(0xFF27496D),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    'Editar tarea',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xff4A72A0)),
+                                  ),
+                                ],
+                              ),
+                              content: SizedBox(
+                                height: 150,
+                                child: Column(
+                                  children: [
+                                    TextField(
+                                      controller: tareaTitle,
+                                      maxLength: 20,
+                                      style: const TextStyle(
+                                          color: Color(0xff4A72A0)),
+                                      decoration: const InputDecoration(
+                                        hintText: 'Titulo',
+                                        hintStyle: TextStyle(
+                                            color: Color.fromRGBO(
+                                                74, 114, 160, 0.6)),
+                                      ),
+                                    ),
+                                    TextField(
+                                      controller: tareaBody,
+                                      maxLength: 80,
+                                      style: const TextStyle(
+                                          color: Color(0xff4A72A0)),
+                                      decoration: const InputDecoration(
+                                        hintText: 'Descripción',
+                                        hintStyle: TextStyle(
+                                            color: Color.fromRGBO(
+                                                74, 114, 160, 0.6)),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Cancelar'),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    var tareaUpdate = Tarea(
+                                        id: tarea.id,
+                                        titulo: tareaTitle.text,
+                                        descripcion: tareaBody.text,
+                                        estado: 0);
+                                    BlocProvider.of<TareasBlocModify>(context)
+                                        .add(UpdateTarea(tarea: tareaUpdate));
+                                    Navigator.of(context).pop();
+                                    await Future.delayed(
+                                            const Duration(milliseconds: 95))
+                                        .then((value) =>
+                                            BlocProvider.of<TareasBloc>(context)
+                                                .add(GetTareas()));
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    backgroundColor: const Color(0xff27496D),
+                                    shape: (RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    )),
+                                  ),
+                                  child: const Text('Actualizar'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Color(0xFF27496D),
+                      ),
+                      onPressed: () async {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text(
+                                'Confirmación',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              content: Text(
+                                  '¿Está seguro de que desea eliminar ${tarea.titulo}?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text(
+                                    'Cancelar',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    side: const BorderSide(
+                                        color: Colors.red), // borde del botón
+                                    backgroundColor:
+                                        Colors.red, // color de fondo del botón
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'Eliminar',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  onPressed: () async {
+                                    BlocProvider.of<TareasBlocModify>(context)
+                                        .add(DeleteTarea(tarea: tarea));
+                                    Navigator.of(context).pop();
+                                    await Future.delayed(
+                                            const Duration(milliseconds: 95))
+                                        .then((value) =>
+                                            BlocProvider.of<TareasBloc>(context)
+                                                .add(GetTareas()));
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }).toList(),
+        ]),
+      );
+    } else {
+      return Container();
+    }
   }
 }

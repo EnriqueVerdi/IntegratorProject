@@ -1,6 +1,7 @@
 part of 'tareas_bloc.dart';
 
-abstract class TareasState {}
+abstract class TareasState {
+}
 
 class Updating extends TareasState {}
 
