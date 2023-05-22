@@ -10,7 +10,7 @@ String apiURL = 'sftonr-3000.csb.app';
 
 abstract class TareaRemoteDataSource {
   Future<List<TareaModel>> getTareas();
-  Future<void> addTarea(List<Tarea> tarea);
+  Future<void> addTarea(List<Tarea> tareas);
   Future<void> updateTarea(Tarea tarea);
   Future<void> deleteTarea(Tarea tarea);
 }
@@ -18,8 +18,7 @@ abstract class TareaRemoteDataSource {
 class TareaRemoteDataSourceImp implements TareaRemoteDataSource {
   @override
   Future<List<TareaModel>> getTareas() async {
-    final prefs = await SharedPreferences.getInstance();
-    var url = Uri.https(apiURL, '/api/tareas');
+    var url = Uri.https(apiURL, '/api/tareas/');
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -27,6 +26,7 @@ class TareaRemoteDataSourceImp implements TareaRemoteDataSource {
           .jsonDecode(response.body)
           .map<TareaModel>((data) => TareaModel.fromJson(data))
           .toList();
+      final prefs = await SharedPreferences.getInstance();
       prefs.setString('tareas', response.body);
       return dataTareas;
     } else {
@@ -36,12 +36,12 @@ class TareaRemoteDataSourceImp implements TareaRemoteDataSource {
 
   @override
   Future<void> addTarea(List<Tarea> tareas) async {
-    var url = Uri.https(apiURL, '/api/tareas');
+    var url = Uri.https(apiURL, '/api/tareas/');
     var headers = {'Content-Type': 'application/json'};
 
     List<Map<String, Object>> body = [];
 
-    for (var tarea in tareas){
+    for (var tarea in tareas) {
       var object = {
         'titulo': tarea.titulo,
         'descripcion': tarea.descripcion,
@@ -50,7 +50,7 @@ class TareaRemoteDataSourceImp implements TareaRemoteDataSource {
 
       body.add(object);
     }
-    
+
     await http.post(url, body: convert.jsonEncode(body), headers: headers);
   }
 
@@ -78,6 +78,10 @@ class TareaRemoteDataSourceImp implements TareaRemoteDataSource {
           };
           body.add(object);
         }
+
+        print("update offline");
+        print(body);
+
         var url = Uri.https(apiURL, '/api/tareas/multiple');
         var headers = {'Content-Type': 'application/json'};
         await http.put(url, body: convert.jsonEncode(body), headers: headers);
@@ -90,6 +94,9 @@ class TareaRemoteDataSourceImp implements TareaRemoteDataSource {
         'descripcion': tarea.descripcion,
         'estado': tarea.estado
       };
+      print("update");
+      print(body);
+      
       var headers = {'Content-Type': 'application/json'};
       await http.put(url, body: convert.jsonEncode(body), headers: headers);
     }
@@ -105,7 +112,8 @@ class TareaRemoteDataSourceImp implements TareaRemoteDataSource {
 
       if (encodedPks != null) {
         List<dynamic> decodedList = json.decode(encodedPks);
-        List<Tarea> tareas = decodedList.map((map) => Tarea.fromMap(map)).toList();
+        List<Tarea> tareas =
+            decodedList.map((map) => Tarea.fromMap(map)).toList();
 
         List<int> pks = [];
         for (var tarea in tareas) {
@@ -114,9 +122,9 @@ class TareaRemoteDataSourceImp implements TareaRemoteDataSource {
         var object = {'primary_keys': pks};
         var url = Uri.https(apiURL, '/api/tareas/multiple');
         var headers = {'Content-Type': 'application/json'};
-        await http.post(url, body: convert.jsonEncode(object), headers: headers);
+        await http.post(url,
+            body: convert.jsonEncode(object), headers: headers);
       }
-
     } else {
       var url = Uri.https(apiURL, '/api/tareas/${tarea.id}');
       await http.delete(url);

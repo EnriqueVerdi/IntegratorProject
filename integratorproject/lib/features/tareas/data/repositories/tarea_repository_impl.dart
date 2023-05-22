@@ -15,8 +15,8 @@ class TareaRepositoryImpl implements TareaRepository {
   }
 
   @override
-  Future<void> addTarea(List<Tarea> tarea) async {
-    return await tareaRemoteDataSource.addTarea(tarea);
+  Future<void> addTarea(List<Tarea> tareas) async {
+    return await tareaRemoteDataSource.addTarea(tareas);
   }
 
   @override

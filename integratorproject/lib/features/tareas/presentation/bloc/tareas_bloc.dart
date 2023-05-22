@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert' as convert;
+import 'dart:developer' as developer;
 
 import 'package:bloc/bloc.dart';
 import 'package:integratorproject/features/tareas/data/models/tarea_model.dart';
@@ -17,7 +18,7 @@ part 'tareas_state.dart';
 class TareasBloc extends Bloc<TareasEvent, TareasState> {
   final GetTareasUsecase getTareasUsecase;
 
-  TareasBloc({required this.getTareasUsecase}) : super(Loading()) {
+  TareasBloc({required this.getTareasUsecase}) : super(InitialState()) {
     on<TareasEvent>((event, emit) async {
       if (event is GetTareas) {
         try {
@@ -25,6 +26,7 @@ class TareasBloc extends Bloc<TareasEvent, TareasState> {
           List<Tarea> response = await getTareasUsecase.execute();
           emit(Loaded(tareas: response));
         } catch (e) {
+          developer.log("Algo salio mal");
           emit(Error(error: e.toString()));
         }
       } else if (event is GetTareasOffline) {

@@ -21,13 +21,11 @@ class PostsPage extends StatefulWidget {
 }
 
 class _PostsPageState extends State<PostsPage> {
-  final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   @override
   void initState() {
     super.initState();
-    // context.read<TareasBloc>().add(GetTareas());
     initConnectivity();
   }
 
@@ -38,15 +36,81 @@ class _PostsPageState extends State<PostsPage> {
   }
 
   void initConnectivity() async {
-    late ConnectivityResult cResult;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      cResult = await _connectivity.checkConnectivity();
+    final cResult = await (Connectivity().checkConnectivity());
+    if (cResult == ConnectivityResult.mobile ||
+        cResult == ConnectivityResult.wifi) {
+      final prefs = await SharedPreferences.getInstance();
 
-      if (cResult == ConnectivityResult.mobile ||
-          cResult == ConnectivityResult.wifi) {
+      if (prefs.containsKey('addTareaOffline')) {
+        String? encodedTareasCache = prefs.getString('addTareaOffline');
+        prefs.remove('addTareaOffline');
+        if (encodedTareasCache != null) {
+          List<dynamic> decodedList = json.decode(encodedTareasCache);
+          List<Tarea> tareas =
+              decodedList.map((map) => Tarea.fromMap(map)).toList();
+
+          final BuildContext currentContext = context;
+          Future.microtask(() {
+            final tareasBloc = currentContext.read<TareasBlocModify>();
+            tareasBloc.add(AddTareas(tareas: tareas));
+          });
+        }
+      }
+
+      if (prefs.containsKey('deleteTareaOffline')) {
+        String? encodedPks = prefs.getString('deleteTareaOffline');
+        if (encodedPks != null) {
+          final BuildContext currentContext = context;
+          Future.microtask((() {
+            final tareasBloc = currentContext.read<TareasBlocModify>();
+            tareasBloc.add(DeleteTarea(
+                tarea: Tarea(
+                    id: 0,
+                    titulo: 'deleted',
+                    descripcion: 'deleted',
+                    estado: 1)));
+          }));
+        }
+      }
+
+      if (prefs.containsKey('updateTareaOffline')) {
+        String? encodedTareasEditedCache =
+            prefs.getString('updateTareaOffline');
+        print("init");
+        print(encodedTareasEditedCache);
+        if (encodedTareasEditedCache != null) {
+          final BuildContext currentContext = context;
+          Future.microtask((() {
+            final tareasBloc = currentContext.read<TareasBlocModify>();
+            tareasBloc.add(UpdateTarea(
+                tarea: Tarea(
+                    id: 0,
+                    titulo: 'edited',
+                    descripcion: 'edited',
+                    estado: 1)));
+          }));
+        }
+      }
+    } else {
+      final BuildContext currentContext = context;
+      Future.microtask(() {
+        final tareasBloc = currentContext.read<TareasBloc>();
+        tareasBloc.add(GetTareasOffline());
+        const snackBar = SnackBar(
+          content: Text('No internet connection []'),
+          duration: Duration(days: 365),
+        );
+        ScaffoldMessenger.of(currentContext).showSnackBar(snackBar);
+      });
+    }
+
+    _connectivitySubscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) async {
+      if (result == ConnectivityResult.wifi ||
+          result == ConnectivityResult.mobile) {
         final prefs = await SharedPreferences.getInstance();
-        // Check if notes were added offline
+
         if (prefs.containsKey('addTareaOffline')) {
           String? encodedTareasCache = prefs.getString('addTareaOffline');
           prefs.remove('addTareaOffline');
@@ -56,69 +120,66 @@ class _PostsPageState extends State<PostsPage> {
                 decodedList.map((map) => Tarea.fromMap(map)).toList();
 
             final BuildContext currentContext = context;
-            Future.microtask(() {
+            Future.microtask((() {
               final tareasBloc = currentContext.read<TareasBlocModify>();
               tareasBloc.add(AddTareas(tareas: tareas));
-            });
+            }));
           }
         }
-      } else {
+
+        if (prefs.containsKey('deleteTareaOffline')) {
+          String? encodedPks = prefs.getString('deleteTareaOffline');
+          if (encodedPks != null) {
+            final BuildContext currentContext = context;
+            Future.microtask((() {
+              final tareasBloc = currentContext.read<TareasBlocModify>();
+              tareasBloc.add(DeleteTarea(
+                  tarea: Tarea(
+                      id: 0,
+                      titulo: 'deleted',
+                      descripcion: 'deleted',
+                      estado: 1)));
+            }));
+          }
+        }
+
+        if (prefs.containsKey('updateTareaOffline')) {
+          String? encodedTareasEditedCache =
+              prefs.getString('updateTareaOffline');
+          print("init 2");
+          print(encodedTareasEditedCache);
+          if (encodedTareasEditedCache != null) {
+            final BuildContext currentContext = context;
+            Future.microtask((() {
+              final tareasBloc = currentContext.read<TareasBlocModify>();
+              tareasBloc.add(UpdateTarea(
+                  tarea: Tarea(
+                      id: 0,
+                      titulo: 'edited',
+                      descripcion: 'edited',
+                      estado: 1)));
+            }));
+          }
+        }
+
         final BuildContext currentContext = context;
-        Future.microtask(() {
+        Future.microtask((() async {
           final tareasBloc = currentContext.read<TareasBloc>();
-          tareasBloc.add(GetTareasOffline());
-          const snackBar = SnackBar(
-            content: Text('No internet connection'),
-            duration: Duration(days: 365),
-          );
-          ScaffoldMessenger.of(currentContext).showSnackBar(snackBar);
-        });
+
+          await Future.delayed(const Duration(milliseconds: 95))
+              .then((value) => tareasBloc.add(GetTareas()))
+              .then((value) =>
+                  ScaffoldMessenger.of(currentContext).clearSnackBars());
+        }));
+      } else {
+        context.read<TareasBloc>().add(GetTareasOffline());
+        const snackBar = SnackBar(
+          content: Text('No internet connection ()'),
+          duration: Duration(days: 365),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
-
-      // Verify connectivity changes
-      _connectivitySubscription = Connectivity()
-          .onConnectivityChanged
-          .listen((ConnectivityResult result) async {
-        if (result == ConnectivityResult.wifi ||
-            result == ConnectivityResult.mobile) {
-          final prefs = await SharedPreferences.getInstance();
-          if (prefs.containsKey('addTareaOffline')) {
-            String? encodedTareasCache = prefs.getString('addTareaOffline');
-            prefs.remove('addTareaOffline');
-            if (encodedTareasCache != null) {
-              List<dynamic> decodedList = json.decode(encodedTareasCache);
-              List<Tarea> tareas =
-                  decodedList.map((map) => Tarea.fromMap(map)).toList();
-
-              final BuildContext currentContext = context;
-              Future.microtask((() {
-                final tareasBloc = currentContext.read<TareasBlocModify>();
-                tareasBloc.add(AddTareas(tareas: tareas));
-              }));
-            }
-          }
-          final BuildContext currentContext = context;
-          Future.microtask((() {
-            final tareasBloc = currentContext.read<TareasBloc>();
-            tareasBloc.add(GetTareas());
-            ScaffoldMessenger.of(currentContext).clearSnackBars();
-          }));
-        } else {
-          context.read<TareasBloc>().add(GetTareasOffline());
-          const snackBar = SnackBar(
-            content: Text('No internet connection'),
-            duration: Duration(days: 365),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        }
-      });
-    } on PlatformException catch (e) {
-      developer.log('Couldn\'t check connectivity status', error: e);
-      return;
-    }
-    if (!mounted) {
-      return Future.value(null);
-    }
+    });
   }
 
   @override
@@ -156,7 +217,13 @@ class _PostsPageState extends State<PostsPage> {
               color: const Color(0xFF27496D),
               tooltip: 'Actualizar lista',
               onPressed: () async {
-                BlocProvider.of<TareasBloc>(context).add(GetTareas());
+                await (Connectivity().checkConnectivity())
+                    .then(((connectivityResult) {
+                  if (connectivityResult == ConnectivityResult.mobile ||
+                      connectivityResult == ConnectivityResult.wifi) {
+                    BlocProvider.of<TareasBloc>(context).add(GetTareas());
+                  }
+                }));
               },
             ),
           )
@@ -171,7 +238,8 @@ class _PostsPageState extends State<PostsPage> {
           return SingleChildScrollView(child: _onlineContent(context, state));
         } else if (state is Error) {
           return Center(
-            child: Text(state.error, style: const TextStyle(color: Colors.red)),
+            child: Text('Error: ${state.error}',
+                style: const TextStyle(color: Colors.red)),
           );
         } else {
           return Container();
@@ -240,35 +308,48 @@ class _PostsPageState extends State<PostsPage> {
             ),
             ElevatedButton(
               onPressed: () async {
-                var tarea = Tarea(
-                    id: 0,
-                    titulo: tareaTitle.text,
-                    descripcion: tareaBody.text,
-                    estado: 0);
-                await (Connectivity().checkConnectivity())
-                    .then(((connectivityResult) async {
-                  if (connectivityResult == ConnectivityResult.mobile ||
-                      connectivityResult == ConnectivityResult.wifi) {
-                    List<Tarea> tareas = [];
-                    tareas.add(tarea);
-                    BlocProvider.of<TareasBlocModify>(context)
-                        .add(AddTareas(tareas: tareas));
-                    Navigator.of(context).pop();
-                    await Future.delayed(const Duration(milliseconds: 95)).then(
-                        (value) => BlocProvider.of<TareasBloc>(context)
-                            .add(GetTareas()));
-                  } else {
-                    final prefs = await SharedPreferences.getInstance();
-                    if (prefs.containsKey('addTareaOffline')) {
-                      String? encodedTareasCache =
-                          prefs.getString('addTareaOffline');
-                      prefs.remove('addTareaOffline');
-                      if (encodedTareasCache != null) {
-                        List<dynamic> decodedList =
-                            json.decode(encodedTareasCache);
-                        List<Tarea> tareas = decodedList
-                            .map((map) => Tarea.fromMap(map))
-                            .toList();
+                String titleText = tareaTitle.text.trim();
+                String bodyText = tareaBody.text.trim();
+
+                if (titleText.isNotEmpty && bodyText.isNotEmpty) {
+                  var tarea = Tarea(
+                      id: 0,
+                      titulo: tareaTitle.text,
+                      descripcion: tareaBody.text,
+                      estado: 0);
+                  await (Connectivity().checkConnectivity())
+                      .then(((connectivityResult) async {
+                    if (connectivityResult == ConnectivityResult.mobile ||
+                        connectivityResult == ConnectivityResult.wifi) {
+                      List<Tarea> tareas = [];
+                      tareas.add(tarea);
+                      BlocProvider.of<TareasBlocModify>(context)
+                          .add(AddTareas(tareas: tareas));
+                      Navigator.of(context).pop();
+                      await Future.delayed(const Duration(milliseconds: 95))
+                          .then((value) => BlocProvider.of<TareasBloc>(context)
+                              .add(GetTareas()));
+                    } else {
+                      final prefs = await SharedPreferences.getInstance();
+                      if (prefs.containsKey('addTareaOffline')) {
+                        String? encodedTareasCache =
+                            prefs.getString('addTareaOffline');
+                        prefs.remove('addTareaOffline');
+                        if (encodedTareasCache != null) {
+                          List<dynamic> decodedList =
+                              json.decode(encodedTareasCache);
+                          List<Tarea> tareas = decodedList
+                              .map((map) => Tarea.fromMap(map))
+                              .toList();
+
+                          tareas.add(tarea);
+                          List<Map<String, dynamic>> encodedList =
+                              tareas.map((tarea) => tarea.toMap()).toList();
+                          String encodedTareas = json.encode(encodedList);
+                          prefs.setString('addTareaOffline', encodedTareas);
+                        }
+                      } else {
+                        List<Tarea> tareas = [];
 
                         tareas.add(tarea);
                         List<Map<String, dynamic>> encodedList =
@@ -276,32 +357,24 @@ class _PostsPageState extends State<PostsPage> {
                         String encodedTareas = json.encode(encodedList);
                         prefs.setString('addTareaOffline', encodedTareas);
                       }
-                    } else {
-                      // print('not exists');
-                      List<Tarea> tareas = [];
 
-                      tareas.add(tarea);
-                      List<Map<String, dynamic>> encodedList =
-                          tareas.map((tarea) => tarea.toMap()).toList();
-                      String encodedTareas = json.encode(encodedList);
-                      prefs.setString('addTareaOffline', encodedTareas);
+                      final BuildContext currentContext = context;
+                      Future.microtask((() {
+                        Navigator.of(currentContext).pop();
+                        ScaffoldMessenger.of(currentContext).clearSnackBars();
+                      }));
+                      const snackBar = SnackBar(
+                        content:
+                            Text('No internet connection. Pending Changes.'),
+                        duration: Duration(days: 365),
+                      );
+                      Future.microtask((() {
+                        ScaffoldMessenger.of(currentContext)
+                            .showSnackBar(snackBar);
+                      }));
                     }
-
-                    final BuildContext currentContext = context;
-                    Future.microtask((() {
-                      Navigator.of(currentContext).pop();
-                      ScaffoldMessenger.of(currentContext).clearSnackBars();
-                    }));
-                    const snackBar = SnackBar(
-                      content: Text('No internet connection. Pending Changes.'),
-                      duration: Duration(days: 365),
-                    );
-                    Future.microtask((() {
-                      ScaffoldMessenger.of(currentContext)
-                          .showSnackBar(snackBar);
-                    }));
-                  }
-                }));
+                  }));
+                }
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
@@ -323,14 +396,15 @@ class _PostsPageState extends State<PostsPage> {
       return Padding(
         padding: const EdgeInsets.only(top: 5, left: 15, right: 15),
         child: Column(children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 5.0),
-            child: Text("Online",
-                style: TextStyle(
-                    color: Color(0xFF27496D),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15.0)),
-          ),
+          // const Padding(
+          //   padding: EdgeInsets.symmetric(vertical: 5.0),
+          //   child:
+          //    Text("Online",
+          //       style: TextStyle(
+          //           color: Color(0xFF27496D),
+          //           fontWeight: FontWeight.bold,
+          //           fontSize: 15.0)),
+          // ),
           //Debajo se agrega el listado de tareas
           ...state.tareas.map((tarea) {
             TextEditingController tareaTitle =
@@ -438,15 +512,84 @@ class _PostsPageState extends State<PostsPage> {
                                         id: tarea.id,
                                         titulo: tareaTitle.text,
                                         descripcion: tareaBody.text,
-                                        estado: 0);
-                                    BlocProvider.of<TareasBlocModify>(context)
-                                        .add(UpdateTarea(tarea: tareaUpdate));
-                                    Navigator.of(context).pop();
-                                    await Future.delayed(
-                                            const Duration(milliseconds: 95))
-                                        .then((value) =>
-                                            BlocProvider.of<TareasBloc>(context)
-                                                .add(GetTareas()));
+                                        estado: tarea.estado);
+                                    await (Connectivity().checkConnectivity())
+                                        .then(((connectivityResult) async {
+                                      if (connectivityResult ==
+                                              ConnectivityResult.mobile ||
+                                          connectivityResult ==
+                                              ConnectivityResult.wifi) {
+                                        BlocProvider.of<TareasBlocModify>(
+                                                context)
+                                            .add(UpdateTarea(
+                                                tarea: tareaUpdate));
+                                        Navigator.of(context).pop();
+                                        await Future.delayed(const Duration(
+                                                milliseconds: 95))
+                                            .then((value) =>
+                                                BlocProvider.of<TareasBloc>(
+                                                        context)
+                                                    .add(GetTareas()));
+                                      } else {
+                                        final prefs = await SharedPreferences
+                                            .getInstance();
+                                        if (prefs.containsKey(
+                                            'updateTareaOffline')) {
+                                          // print('exists');
+                                          String? encodedTareaUpdate = prefs
+                                              .getString('updateTareaOffline');
+                                          prefs.remove('updateTareaOffline');
+                                          if (encodedTareaUpdate != null) {
+                                            List<dynamic> decodedList =
+                                                json.decode(encodedTareaUpdate);
+                                            List<Tarea> tarea = decodedList
+                                                .map(
+                                                    (map) => Tarea.fromMap(map))
+                                                .toList();
+
+                                            tarea.add(tareaUpdate);
+                                            List<Map<String, dynamic>>
+                                                encodedList = tarea
+                                                    .map((tareaU) =>
+                                                        tareaU.toMap())
+                                                    .toList();
+                                            String encodedTareas =
+                                                json.encode(encodedList);
+                                            prefs.setString(
+                                                'updateTareaOffline',
+                                                encodedTareas);
+                                          }
+                                        } else {
+                                          List<Tarea> tareas = [];
+                                          tareas.add(tareaUpdate);
+                                          List<Map<String, dynamic>>
+                                              encodedList = tareas
+                                                  .map((tareaU) =>
+                                                      tareaU.toMap())
+                                                  .toList();
+                                          String encodedTareasUpdate =
+                                              json.encode(encodedList);
+                                          prefs.setString('updateTareaOffline',
+                                              encodedTareasUpdate);
+                                        }
+                                        final BuildContext currentContext =
+                                            context;
+                                        Future.microtask((() {
+                                          Navigator.of(currentContext).pop();
+                                          ScaffoldMessenger.of(currentContext)
+                                              .clearSnackBars();
+                                        }));
+                                        const snackBar = SnackBar(
+                                          content: Text(
+                                              'No internet connection. Pending Changes.'),
+                                          duration: Duration(days: 365),
+                                        );
+                                        Future.microtask((() {
+                                          ScaffoldMessenger.of(currentContext)
+                                              .showSnackBar(snackBar);
+                                        }));
+                                      }
+                                    }));
                                   },
                                   style: ElevatedButton.styleFrom(
                                     foregroundColor: Colors.white,
@@ -504,14 +647,80 @@ class _PostsPageState extends State<PostsPage> {
                                     style: TextStyle(color: Colors.white),
                                   ),
                                   onPressed: () async {
-                                    BlocProvider.of<TareasBlocModify>(context)
-                                        .add(DeleteTarea(tarea: tarea));
-                                    Navigator.of(context).pop();
-                                    await Future.delayed(
-                                            const Duration(milliseconds: 95))
-                                        .then((value) =>
-                                            BlocProvider.of<TareasBloc>(context)
-                                                .add(GetTareas()));
+                                    await (Connectivity().checkConnectivity())
+                                        .then(((connectivityResult) async {
+                                      if (connectivityResult ==
+                                              ConnectivityResult.mobile ||
+                                          connectivityResult ==
+                                              ConnectivityResult.wifi) {
+                                        BlocProvider.of<TareasBlocModify>(
+                                                context)
+                                            .add(DeleteTarea(tarea: tarea));
+                                        Navigator.of(context).pop();
+                                        await Future.delayed(const Duration(
+                                                milliseconds: 95))
+                                            .then((value) =>
+                                                BlocProvider.of<TareasBloc>(
+                                                        context)
+                                                    .add(GetTareas()));
+                                      } else {
+                                        final prefs = await SharedPreferences
+                                            .getInstance();
+                                        if (prefs.containsKey(
+                                            'deleteTareaOffline')) {
+                                          String? encodedPk = prefs
+                                              .getString('deleteTareaOffline');
+                                          prefs.remove('deleteTareaOffline');
+                                          if (encodedPk != null) {
+                                            List<dynamic> decodedList =
+                                                json.decode(encodedPk);
+                                            List<Tarea> tareas = decodedList
+                                                .map(
+                                                    (map) => Tarea.fromMap(map))
+                                                .toList();
+
+                                            tareas.add(tarea);
+                                            List<Map<String, dynamic>>
+                                                encodedList = tareas
+                                                    .map((tarea) =>
+                                                        tarea.toMap())
+                                                    .toList();
+                                            String encodedTareas =
+                                                json.encode(encodedList);
+                                            prefs.setString(
+                                                'deleteTareaOffline',
+                                                encodedTareas);
+                                          }
+                                        } else {
+                                          List<Tarea> tareas = [];
+                                          tareas.add(tarea);
+                                          List<Map<String, dynamic>>
+                                              encodedList = tareas
+                                                  .map((tarea) => tarea.toMap())
+                                                  .toList();
+                                          String encodedPks =
+                                              json.encode(encodedList);
+                                          prefs.setString(
+                                              'deleteTareaOffline', encodedPks);
+                                        }
+                                        final BuildContext currentContext =
+                                            context;
+                                        Future.microtask((() {
+                                          Navigator.of(currentContext).pop();
+                                          ScaffoldMessenger.of(currentContext)
+                                              .clearSnackBars();
+                                        }));
+                                        const snackBar = SnackBar(
+                                          content: Text(
+                                              'No internet connection. Pending Changes.'),
+                                          duration: Duration(days: 365),
+                                        );
+                                        Future.microtask((() {
+                                          ScaffoldMessenger.of(currentContext)
+                                              .showSnackBar(snackBar);
+                                        }));
+                                      }
+                                    }));
                                   },
                                 ),
                               ],
