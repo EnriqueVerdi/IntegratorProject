@@ -122,7 +122,7 @@ class TareaRemoteDataSourceImp implements TareaRemoteDataSource {
         var object = {'primary_keys': pks};
         var url = Uri.https(apiURL, '/api/tareas/multiple');
         var headers = {'Content-Type': 'application/json'};
-        await http.post(url,
+        await http.delete(url,
             body: convert.jsonEncode(object), headers: headers);
       }
     } else {
