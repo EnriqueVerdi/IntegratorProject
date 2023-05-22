@@ -1,13 +1,16 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'package:integratorproject/features/tareas/data/models/tarea_model.dart';
 import 'package:integratorproject/features/tareas/domain/entities/tarea.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 String apiURL = 'sftonr-3000.csb.app';
 
 abstract class TareaRemoteDataSource {
   Future<List<TareaModel>> getTareas();
-  Future<void> addTarea(Tarea tarea);
+  Future<void> addTarea(List<Tarea> tarea);
   Future<void> updateTarea(Tarea tarea);
   Future<void> deleteTarea(Tarea tarea);
 }
@@ -15,58 +18,108 @@ abstract class TareaRemoteDataSource {
 class TareaRemoteDataSourceImp implements TareaRemoteDataSource {
   @override
   Future<List<TareaModel>> getTareas() async {
+    final prefs = await SharedPreferences.getInstance();
     var url = Uri.https(apiURL, '/api/tareas');
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
-      return convert
+      var dataTareas = convert
           .jsonDecode(response.body)
           .map<TareaModel>((data) => TareaModel.fromJson(data))
           .toList();
+      prefs.setString('tareas', response.body);
+      return dataTareas;
     } else {
       throw Exception('Error');
     }
   }
 
   @override
-  Future<void> addTarea(Tarea tarea) async {
+  Future<void> addTarea(List<Tarea> tareas) async {
     var url = Uri.https(apiURL, '/api/tareas');
-    var body = {
-      'titulo': tarea.titulo,
-      'descripcion': tarea.descripcion,
-      'estado': tarea.estado
-    };
     var headers = {'Content-Type': 'application/json'};
-    var response =
-        await http.post(url, body: convert.jsonEncode(body), headers: headers);
 
-    // print(response.body.toString());
-    print('Added');
+    List<Map<String, Object>> body = [];
+
+    for (var tarea in tareas){
+      var object = {
+        'titulo': tarea.titulo,
+        'descripcion': tarea.descripcion,
+        'estado': tarea.estado
+      };
+
+      body.add(object);
+    }
+    
+    await http.post(url, body: convert.jsonEncode(body), headers: headers);
   }
 
   @override
   Future<void> updateTarea(Tarea tarea) async {
-    var url = Uri.https(apiURL, '/api/tareas/');
-    var body = {
-      'id': tarea.id,
-      'titulo': tarea.titulo,
-      'descripcion': tarea.descripcion,
-      'estado': tarea.estado
-    };
-    var headers = {'Content-Type': 'application/json'};
-    var response =
-        await http.put(url, body: convert.jsonEncode(body), headers: headers);
+    final prefs = await SharedPreferences.getInstance();
 
-    // print(response.body.toString());
-    print('Updated');
+    if (prefs.containsKey('updateTareaOffline')) {
+      String? encodedDataCache = prefs.getString('updateTareaOffline');
+      prefs.remove('updateTareaOffline');
+
+      if (encodedDataCache != null) {
+        List<dynamic> decodedList = json.decode(encodedDataCache);
+        List<Map<String, Object>> body = [];
+
+        List<Tarea> tareas =
+            decodedList.map((map) => Tarea.fromMap(map)).toList();
+
+        for (var tarea in tareas) {
+          var object = {
+            'id': tarea.id,
+            'titulo': tarea.titulo,
+            'descripcion': tarea.descripcion,
+            'estado': tarea.estado
+          };
+          body.add(object);
+        }
+        var url = Uri.https(apiURL, '/api/tareas/multiple');
+        var headers = {'Content-Type': 'application/json'};
+        await http.put(url, body: convert.jsonEncode(body), headers: headers);
+      }
+    } else {
+      var url = Uri.https(apiURL, '/api/tareas/');
+      var body = {
+        'id': tarea.id,
+        'titulo': tarea.titulo,
+        'descripcion': tarea.descripcion,
+        'estado': tarea.estado
+      };
+      var headers = {'Content-Type': 'application/json'};
+      await http.put(url, body: convert.jsonEncode(body), headers: headers);
+    }
   }
 
   @override
   Future<void> deleteTarea(Tarea tarea) async {
-    var url = Uri.https(apiURL, '/api/tareas/${tarea.id}');
-    var response = await http.delete(url);
+    final prefs = await SharedPreferences.getInstance();
 
-    // print(response.body.toString());
-    print('Deleted');
+    if (prefs.containsKey('deleteTareaOffline')) {
+      String? encodedPks = prefs.getString('deleteTareaOffline');
+      prefs.remove('deleteTareaOffline');
+
+      if (encodedPks != null) {
+        List<dynamic> decodedList = json.decode(encodedPks);
+        List<Tarea> tareas = decodedList.map((map) => Tarea.fromMap(map)).toList();
+
+        List<int> pks = [];
+        for (var tarea in tareas) {
+          pks.add(tarea.id);
+        }
+        var object = {'primary_keys': pks};
+        var url = Uri.https(apiURL, '/api/tareas/multiple');
+        var headers = {'Content-Type': 'application/json'};
+        await http.post(url, body: convert.jsonEncode(object), headers: headers);
+      }
+
+    } else {
+      var url = Uri.https(apiURL, '/api/tareas/${tarea.id}');
+      await http.delete(url);
+    }
   }
 }

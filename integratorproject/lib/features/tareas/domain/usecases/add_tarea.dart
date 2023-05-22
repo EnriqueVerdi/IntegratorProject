@@ -7,7 +7,7 @@ class AddTareaUsecase {
 
   AddTareaUsecase(this.tareaRepository);
 
-  Future<void> execute(Tarea tarea) async {
+  Future<void> execute(List<Tarea> tarea) async {
     return await tareaRepository.addTarea(tarea);
   }
 }

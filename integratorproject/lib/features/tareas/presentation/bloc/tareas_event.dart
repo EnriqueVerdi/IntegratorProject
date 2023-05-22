@@ -4,10 +4,12 @@ abstract class TareasEvent {}
 
 class GetTareas extends TareasEvent {}
 
-class AddTareas extends TareasEvent {
-  final Tarea tarea;
+class GetTareasOffline extends TareasEvent {}
 
-  AddTareas({required this.tarea});
+class AddTareas extends TareasEvent {
+  final List<Tarea> tareas;
+
+  AddTareas({required this.tareas});
 }
 
 class UpdateTarea extends TareasEvent {
